@@ -65,6 +65,7 @@ if ($ADMIN->fulltree) {
     $optionscs['idnumber'] = get_string('idnumbercourse');
     $optionscs['shortname'] = get_string('shortnamecourse');
     $optionscs['codetable'] = get_string('codetable', 'leganto');
+    $optionscs['unibzapi'] = get_string('unibzapi', 'leganto');
     $settings->add(new leganto_codesource_setting('leganto/codesource', get_string('codesource', 'leganto'),
             get_string('codesource_desc', 'leganto'), 'idnumber', $optionscs));
 

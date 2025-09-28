@@ -400,6 +400,31 @@ class leganto {
         return $this->apiconfigured = true;
     }
 
+    private function get_leganto_course_code($courseid) {
+        global $CFG;
+        require_once($CFG->libdir . '/filelib.php');
+        $curl = new curl;
+        $header = [
+            'Accept: application/json',
+        ];
+        $options = [
+            'CURLOPT_TIMEOUT' => 30,
+            'CURLOPT_USERPWD' => $CFG->alma_user . ':' . $CFG->alma_password,
+        ];
+        $curl->setHeader($header);
+        $curl->setopt($options);
+
+
+            $url = new moodle_url($CFG->alma_url . $courseid);
+
+
+        // Submit request TO UNIBZ API
+        $response = $curl->get($url->out(), $params);
+        $json = json_decode($response);
+        return $json->CourseCode;
+    }
+
+    
     /**
      * Call a specified Alma API method, passing the parameters provided.
      *
@@ -558,6 +583,11 @@ class leganto {
         } else if ($adminconfig->codesource == 'shortname') {
             $codes = $this->extract_codes($course->shortname);
         }
+
+        if ($adminconfig->codesource == 'unibzapi') {
+            $codes = $this->extract_codes(get_leganto_course_code($course->idnumber));
+        }
+
 
         // Try ID number as fallback if no code found so far, regardless of code source specified in admin config.
         if ($adminconfig->codesource == 'idnumber' || empty($codes)) {
